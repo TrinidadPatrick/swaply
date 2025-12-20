@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",                // fine, modern JS
+    "module": "ESNext",                // fine for ES Modules
+    "moduleResolution": "node",        // resolves imports like Node
+    "strict": true,                     // enable all strict type checks
+    "esModuleInterop": true,           // allows default imports from CommonJS modules
+    "forceConsistentCasingInFileNames": true, // recommended for Node
+    "skipLibCheck": true,              // speeds up compile by skipping type checks in node_modules
+    "outDir": "./dist"                 // optional: compiled JS output directory
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
