@@ -57,7 +57,8 @@ export const getUserbyEmailUsername = async (email_username: string) => {
                 {email: email_username}
             ]
         }, select : {
-            email: true
+            email: true,
+            id: true
         }
     })
     return user

@@ -11,6 +11,30 @@ interface emailProps {
     time: string
 }
 
+interface updatePasswordProps {
+    oldPassword?: string,
+    newPassword: string,
+    action: updatePasswordAction,
+    id: number
+}
+
+export enum updatePasswordAction {
+    RESET = "RESET",
+    UPDATE = "UPDATE"
+}
+
+export const upsertOtp = async (otpToken: string,tokenExpiresAt: Date, id : number) => {
+    return await prisma.userAuth.update({
+        where : {
+            id
+        },
+        data: {
+            verificationToken: otpToken,
+            tokenExpiresAt
+        }
+    })
+}
+
 // Verify OTP
 export const getUserByOtp = async (otpToken: string, id : number) => {
     return prisma.userAuth.findFirst({
@@ -34,6 +58,20 @@ export const markEmailAsVerified = async (id: number) => {
                 verificationToken: null
             }
         })
+}
+
+export const updatePassword = async ({oldPassword, newPassword, action, id} : updatePasswordProps ) => {
+    if(action === updatePasswordAction.RESET){
+        return await prisma.userAuth.update({
+            where: {
+                id
+            },
+            data: {
+                password: newPassword,
+                verificationToken: null
+            }
+        })
+    }
 }
 
 export const sendOtp = async ({recipient, otp, subject, header, validity, time} : emailProps) => {
