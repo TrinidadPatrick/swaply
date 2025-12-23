@@ -1,3 +1,6 @@
+
+
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
 import {prisma} from '../lib/prisma'
 
 export interface User {
@@ -32,8 +35,39 @@ export const getUser = async (id : number | undefined) => {
     const user = await prisma.user.findUnique({
         where : {
             id : id
+        }, include : {
+            auth : {
+                select : {
+                    id : true,
+                    userId: true,
+                    emailVerified: true
+                }
+            }
         }
     })
     return user
 
+}
+
+export const getUserbyEmailUsername = async (email_username: string) => {
+    const user = await prisma.user.findFirst({
+        where : {
+            OR : [
+                {username: email_username},
+                {email: email_username}
+            ]
+        }, select : {
+            email: true
+        }
+    })
+    return user
+}
+
+export const deleteUser = async (id: number | undefined) => {
+        const user = await prisma.user.delete({
+            where: {
+                id
+            }
+        })
+        return user
 }

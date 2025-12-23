@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
-import { createUser, getAllUsers, getUser } from "../services/user.service";
+import { createUser, deleteUser, getAllUsers, getUser } from "../services/user.service";
 import { generateVerificationToken } from "../helpers/generate-verification-token";
 import { hashPassword } from "../helpers/password-util";
 import { handleError } from "../helpers/error-handler";
+import { sendOtp } from "../services/user.auth.service";
 
 interface User {
     firstName: string;
@@ -19,7 +20,7 @@ export const c_getUser = async ( req: Request, res: Response) => {
     try {
         const user = await getUser(Number(id))
         if(user){
-            res.status(200).json({message : "Fetched user successfully", user})
+            return res.status(200).json({message : "Fetched user successfully", user})
         }
         res.status(404).json({message : "User not found", user})
     } catch (error) {
@@ -55,9 +56,30 @@ export const c_createUser = async ( req: any, res: any) => {
 
     try {
         const user = await createUser(data)
+        const email = await sendOtp({
+            recipient: user.email,
+            otp: verificationToken,
+            subject: 'Account Verification OTP',
+            header: 'Here is your One-Time Password (OTP) for verifying your account', 
+            validity: 2,
+            time: 'hours'
+        })
         res.json({message: "User created successfully", user})
     } catch (error : any) {
         const {status, message} = handleError(error)
         res.status(status).json({message: message})
+    }
+}
+
+export const c_deleteUser = async (req: any, res: any) => {
+    const id = req.params.id
+    if(id){
+        try {
+            const user = await deleteUser(Number(id))
+            res.json({message: "User deleted successfully", user})
+        } catch (error) {
+            const {status, message} = handleError(error)
+            res.status(status).json({message: message})
+        }
     }
 }

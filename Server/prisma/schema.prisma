@@ -43,7 +43,7 @@ model UserAuth {
   emailVerified     Boolean   @default(false)
   verificationToken String?
   tokenExpiresAt    DateTime?
-  user              User      @relation("UserToAuth", fields: [userId], references: [id])
+  user              User      @relation("UserToAuth", fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_auths")
 }
