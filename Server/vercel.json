@@ -1,15 +1,13 @@
 {
-  "version": 2,
+  "version": 3,
   "builds": [
     {
-      "src": "dist/api/index.js",
-      "use": "@vercel/node"
+      "src": "package.json",
+      "use": "@vercel/node",
+      "config": { "includeFiles": ["**/*.ts"] }
     }
   ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "dist/api/index.js"
-    }
+    { "src": "/(.*)", "dest": "dist/server.js" }
   ]
 }
