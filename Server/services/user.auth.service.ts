@@ -29,8 +29,8 @@ export const upsertOtp = async (otpToken: string,tokenExpiresAt: Date, id : numb
             id
         },
         data: {
-            verificationToken: otpToken,
-            tokenExpiresAt
+            verification_token: otpToken,
+            token_expires_at: tokenExpiresAt
         }
     })
 }
@@ -39,9 +39,9 @@ export const upsertOtp = async (otpToken: string,tokenExpiresAt: Date, id : numb
 export const getUserByOtp = async (otpToken: string, id : number) => {
     return prisma.userAuth.findFirst({
         where: {
-            userId : id,
-            verificationToken : otpToken,
-            tokenExpiresAt : {
+            user_id : id,
+            verification_token : otpToken,
+            token_expires_at : {
                 gte: new Date()
             }
         }
@@ -54,8 +54,8 @@ export const markEmailAsVerified = async (id: number) => {
                 id
             },
             data: {
-                emailVerified: true,
-                verificationToken: null
+                email_verified: true,
+                verification_token: null
             }
         })
 }
@@ -68,7 +68,7 @@ export const updatePassword = async ({oldPassword, newPassword, action, id} : up
             },
             data: {
                 password: newPassword,
-                verificationToken: null
+                verification_token: null
             }
         })
     }

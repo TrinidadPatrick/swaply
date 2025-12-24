@@ -20,15 +20,21 @@ export const getAllUsers = async () => {
 
 export const createUser = async (data : User) => {
     const {firstName, lastName, username, email, password, verificationToken, tokenExpiresAt} = data
-    const user = await prisma.user.create({
+
+    const result = await prisma.$transaction(async (tx) => {
+
+        const user = await tx.user.create({
         data : {first_name : firstName, last_name: lastName, username, email}
     })
 
-    await prisma.userAuth.create({
+    await tx.userAuth.create({
         data: {user_id : user.id, password, verification_token: verificationToken,  token_expires_at: tokenExpiresAt}
     })
 
     return user
+    })
+
+    return result
 }
 
 export const getUser = async (id : number | undefined) => {
