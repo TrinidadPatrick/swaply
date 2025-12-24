@@ -6,7 +6,7 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test vitest run",
     "dev": "npx tsx watch server.ts",
-    "build": "tsc && node scripts/fix-esm.js",
+    "build": "npm run prisma-generate && tsc && node scripts/fix-esm.js",
     "vercel-build": "npm run build",
     "generate-prisma" : "npx prisma generate && npx prisma generate --schema=prisma/schema.test.prisma"
   },
