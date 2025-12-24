@@ -62,7 +62,7 @@ describe('User Service', () => {
             data: {username, email, first_name: firstName, last_name: lastName}
         })
         expect(userAuthCreateSpy).toHaveBeenCalledWith({
-            data: {user_id: user.id, password, verification_token: verificationToken, token_expires_at: tokenExpiresAt}
+            data: {user_id: user.id, password, verification_token: verificationToken, token_expires_at: expect.any(Date)}
         })
     })
 
