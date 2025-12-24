@@ -24,7 +24,7 @@ export enum updatePasswordAction {
 }
 
 export const upsertOtp = async (otpToken: string,tokenExpiresAt: Date, id : number) => {
-    return await prisma.userAuth.update({
+    await prisma.userAuth.update({
         where : {
             user_id: id
         },
@@ -63,7 +63,7 @@ export const markEmailAsVerified = async (id: number) => {
 
 export const updatePassword = async ({oldPassword, newPassword, action, id} : updatePasswordProps ) => {
     if(action === updatePasswordAction.RESET){
-        return await prisma.userAuth.update({
+        await prisma.userAuth.update({
             where: {
                 id
             },
