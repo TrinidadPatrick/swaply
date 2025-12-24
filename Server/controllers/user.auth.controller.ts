@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { getUserByOtp, markEmailAsVerified, sendOtp, updatePassword, updatePasswordAction, upsertOtp } from "../services/user.auth.service";
-import { getUserbyEmailUsername } from "../services/user.service";
-import { handleError } from "../helpers/error-handler";
-import { generateVerificationToken } from "../helpers/generate-verification-token";
-import { hashPassword } from "../helpers/password-util";
+import { getUserByOtp, markEmailAsVerified, sendOtp, updatePassword, updatePasswordAction, upsertOtp } from "../services/user.auth.service.js";
+import { getUserbyEmailUsername } from "../services/user.service.js";
+import { handleError } from "../helpers/error-handler.js";
+import { generateVerificationToken } from "../helpers/generate-verification-token.js";
+import { hashPassword } from "../helpers/password-util.js";
 
 export const c_verifyAccount = async (req : Request, res : Response) => {
     const {userId, otpToken} = req.body

@@ -1,5 +1,5 @@
 import express from 'express'
-import { c_forgotPassword, c_resetPassword, c_verifyAccount } from '../controllers/user.auth.controller'
+import { c_forgotPassword, c_resetPassword, c_verifyAccount } from '../controllers/user.auth.controller.js'
 
 const router = express.Router()
 

@@ -1,7 +1,7 @@
 
 
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
-import {prisma} from '../lib/prisma'
+import {prisma} from '../lib/prisma.js'
 
 export interface User {
     firstName: string;

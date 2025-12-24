@@ -1,5 +1,5 @@
-import { comparePassword, hashPassword } from '../helpers/password-util';
-import {prisma} from '../lib/prisma'
+import { comparePassword, hashPassword } from '../helpers/password-util.js';
+import {prisma} from '../lib/prisma.js'
 
 import nodemailer from 'nodemailer';
 

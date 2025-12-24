@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { createUser, deleteUser, getAllUsers, getUser } from "../services/user.service";
-import { generateVerificationToken } from "../helpers/generate-verification-token";
-import { hashPassword } from "../helpers/password-util";
-import { handleError } from "../helpers/error-handler";
-import { sendOtp } from "../services/user.auth.service";
+import { createUser, deleteUser, getAllUsers, getUser } from "../services/user.service.js";
+import { generateVerificationToken } from "../helpers/generate-verification-token.js";
+import { hashPassword } from "../helpers/password-util.js";
+import { handleError } from "../helpers/error-handler.js";
+import { sendOtp } from "../services/user.auth.service.js";
 
 interface User {
     firstName: string;
