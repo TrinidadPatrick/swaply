@@ -1,3 +1,4 @@
+import { comparePassword, hashPassword } from '../helpers/password-util';
 import {prisma} from '../lib/prisma'
 
 import nodemailer from 'nodemailer';
@@ -70,6 +71,28 @@ export const updatePassword = async ({oldPassword, newPassword, action, id} : up
             data: {
                 password: newPassword,
                 verification_token: null
+            }
+        })
+    }
+    else if(action === updatePasswordAction.UPDATE && oldPassword){
+        const user = await prisma.userAuth.findUnique({
+            where: {
+                user_id: id,
+            }
+        })
+
+        if(!user) throw new Error('User not found')
+
+        const isPasswordMatched = await comparePassword(oldPassword, user.password)
+
+        if(!isPasswordMatched) throw new Error('Old password is incorrect')
+
+        await prisma.userAuth.update({
+            where: {
+                user_id: id
+            },
+            data: {
+                password: await hashPassword(newPassword)
             }
         })
     }
