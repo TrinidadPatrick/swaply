@@ -65,7 +65,7 @@ export const updatePassword = async ({oldPassword, newPassword, action, id} : up
     if(action === updatePasswordAction.RESET){
         await prisma.userAuth.update({
             where: {
-                id
+                user_id: id
             },
             data: {
                 password: newPassword,
