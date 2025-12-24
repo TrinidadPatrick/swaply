@@ -25,7 +25,7 @@ export const createUser = async (data : User) => {
     })
 
     await prisma.userAuth.create({
-        data: {userId : user.id, password, verificationToken, tokenExpiresAt}
+        data: {user_id : user.id, password, verification_token: verificationToken,  token_expires_at: tokenExpiresAt}
     })
 
     return user
@@ -39,8 +39,8 @@ export const getUser = async (id : number | undefined) => {
             auth : {
                 select : {
                     id : true,
-                    userId: true,
-                    emailVerified: true
+                    user_id: true,
+                    email_verified: true
                 }
             }
         }

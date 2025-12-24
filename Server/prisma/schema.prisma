@@ -38,12 +38,15 @@ model User {
 
 model UserAuth {
   id                Int       @id @default(autoincrement())
-  userId            Int       @unique
+  user_id            Int       @unique
   password          String
-  emailVerified     Boolean   @default(false)
-  verificationToken String?
-  tokenExpiresAt    DateTime?
-  user              User      @relation("UserToAuth", fields: [userId], references: [id], onDelete: Cascade)
+  email_verified     Boolean   @default(false)
+  verification_token String?
+  token_expires_at    DateTime?
+  user              User      @relation("UserToAuth", fields: [user_id], references: [id], onDelete: Cascade)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@map("user_auths")
 }
