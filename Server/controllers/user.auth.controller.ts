@@ -11,7 +11,7 @@ export const c_verifyAccount = async (req : Request, res : Response) => {
 
     try {
         const user = await getUserByOtp(otpToken, userId)
-        if(user && user.emailVerified) res.status(200).json({message: "User is already verified"})
+        if(user && user.email_verified) res.status(200).json({message: "User is already verified"})
         if(user){
             await markEmailAsVerified(userId)
             res.status(200).json({message: "User verification success"})
