@@ -26,7 +26,7 @@ export enum updatePasswordAction {
 export const upsertOtp = async (otpToken: string,tokenExpiresAt: Date, id : number) => {
     return await prisma.userAuth.update({
         where : {
-            id
+            user_id: id
         },
         data: {
             verification_token: otpToken,
@@ -37,7 +37,7 @@ export const upsertOtp = async (otpToken: string,tokenExpiresAt: Date, id : numb
 
 // Verify OTP
 export const getUserByOtp = async (otpToken: string, id : number) => {
-    return prisma.userAuth.findFirst({
+    const user = await prisma.userAuth.findFirst({
         where: {
             user_id : id,
             verification_token : otpToken,
@@ -46,10 +46,11 @@ export const getUserByOtp = async (otpToken: string, id : number) => {
             }
         }
     })
+    return user
 }
 
 export const markEmailAsVerified = async (id: number) => {
-        return await prisma.userAuth.update({
+        await prisma.userAuth.update({
             where : {
                 id
             },
