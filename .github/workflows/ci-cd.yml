@@ -38,3 +38,18 @@ jobs:
       - name: Run tests
         run: npm test
         working-directory: Server
+
+  deploy:
+      needs: build-and-test  # ← Only runs if tests pass
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+
+        - name: Deploy to Vercel
+          uses: amondnet/vercel-action@v23
+          with:
+            vercel-token: ${{ secrets.VERCEL_TOKEN }}
+            vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+            vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+            working-directory: Server
+            prod: true
