@@ -1,6 +1,6 @@
 import '../setup';
 import { PrismaClient } from '../../generated/prisma/test/client';
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
 import { describe, beforeAll, expect, afterAll, it } from 'vitest';
 
 const connectionString = `${process.env.DATABASE_URL}`;
@@ -11,7 +11,7 @@ const prisma = new PrismaClient({adapter});
 describe('Prisma client (Sqlite)', () => {
   beforeAll(async () => {
     if (process.env.DATABASE_NAME === 'myapp_test') {
-      await prisma.user.deleteMany();
+      await prisma.test_user.deleteMany();
     }
   }, 30000);
 

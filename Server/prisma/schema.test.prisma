@@ -4,46 +4,49 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-enum Role {
-  USER
-  ADMIN
+enum test_Role {
+    USER
+    ADMIN
 }
 
-generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma/test"
+generator test_client {
+    provider = "prisma-client"
+    output   = "../generated/prisma/test"
 }
 
 datasource db {
-  provider = "sqlite"
+    provider = "sqlite"
 }
 
-model User {
-  id         Int    @id @default(autoincrement())
-  first_name String
-  last_name  String
-  username   String @unique
-  email      String @unique
-  role       Role   @default(USER)
+model test_user {
+    id         Int       @id @default(autoincrement())
+    first_name String
+    last_name  String
+    username   String    @unique
+    email      String    @unique
+    role       test_Role @default(USER)
 
-  is_active Boolean @default(true)
+    is_active Boolean @default(true)
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
 
-  auth UserAuth? @relation("UserToAuth")
+    auth test_userAuth? @relation("UserToAuth")
 
-  @@map("users")
+    @@map("users")
 }
 
-model UserAuth {
-  id                Int       @id @default(autoincrement())
-  userId            Int       @unique
-  password          String
-  emailVerified     Boolean   @default(false)
-  verificationToken String?
-  tokenExpiresAt    DateTime?
-  user              User      @relation("UserToAuth", fields: [userId], references: [id], onDelete: Cascade)
+model test_userAuth {
+    id                 Int       @id @default(autoincrement())
+    user_id            Int       @unique
+    password           String
+    email_verified     Boolean   @default(false)
+    verification_token String?
+    token_expires_at   DateTime?
+    user               test_user @relation("UserToAuth", fields: [user_id], references: [id], onDelete: Cascade)
 
-  @@map("user_auths")
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+
+    @@map("user_auths")
 }
