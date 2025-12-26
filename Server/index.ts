@@ -8,7 +8,7 @@ app.use(express.json())
 app.use('/api', routes)
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Hello from Express on Vercel!' });
+  res.json({ message: 'Welcome To Swaply Initial Server' });
 });
 
 export default app
