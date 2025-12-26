@@ -1,7 +1,10 @@
 import { comparePassword, hashPassword } from '../helpers/password-util.js';
 import {prisma} from '../lib/prisma.js'
+import jwt from 'jsonwebtoken';
 
 import nodemailer from 'nodemailer';
+import { getUserbyEmailUsername } from './user.service.js';
+import { AppError } from '../helpers/AppError.js';
 
 interface emailProps {
     recipient: string,
@@ -69,7 +72,7 @@ export const updatePassword = async ({oldPassword, newPassword, action, id} : up
                 user_id: id
             },
             data: {
-                password: newPassword,
+                password: await hashPassword(newPassword),
                 verification_token: null
             }
         })
@@ -95,6 +98,33 @@ export const updatePassword = async ({oldPassword, newPassword, action, id} : up
                 password: await hashPassword(newPassword)
             }
         })
+    }
+}
+
+export const validateCredentials = async (email_username: string, password: string) => {
+    if(!email_username || !password){
+        throw new AppError("Email and password are required", 400)
+    }
+
+    const user = await getUserbyEmailUsername(email_username, true) // true if want to include password
+
+    if(!user || !user.auth){
+        throw new AppError("Invalid email or password", 401);
+    }
+
+    const isValidPassword = await comparePassword(password, user.auth.password)
+
+    if(!isValidPassword){
+        throw new AppError("Invalid email or password", 401);
+    }
+
+    const jwt_token = jwt.sign({ id: user.id }, 'asdsadasasd', {
+        expiresIn: '1hr',
+    });
+    
+    return {
+        user_id: user.id,
+        jwt_token: jwt_token
     }
 }
 

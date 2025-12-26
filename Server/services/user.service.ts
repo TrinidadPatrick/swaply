@@ -55,7 +55,7 @@ export const getUser = async (id : number | undefined) => {
 
 }
 
-export const getUserbyEmailUsername = async (email_username: string) => {
+export const getUserbyEmailUsername = async (email_username: string, include_password? : boolean) => {
     const user = await prisma.user.findFirst({
         where : {
             OR : [
@@ -64,7 +64,13 @@ export const getUserbyEmailUsername = async (email_username: string) => {
             ]
         }, select : {
             email: true,
-            id: true
+            id: true,
+            auth: {
+                select: {
+                    user_id: true,
+                    password: include_password || false
+                }
+            }
         }
     })
     return user
