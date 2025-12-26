@@ -10,7 +10,7 @@ const prisma = new PrismaClient({adapter});
 
 describe('Prisma client (Sqlite)', () => {
   beforeAll(async () => {
-    if (process.env.DATABASE_NAME === 'myapp_test') {
+    if ( process.env.DATABASE_NAME=== 'myapp_test') {
       await prisma.test_user.deleteMany();
     }
   }, 30000);
