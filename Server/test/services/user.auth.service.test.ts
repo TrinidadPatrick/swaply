@@ -100,11 +100,11 @@ describe('User Auth Service', () => {
 
     it('should update password with reset', async () => {
         const mock_data = {
-            newPassword: 'testnewpassword',
+            newPassword: 'newhashedpassword',
             action: userAuthService.updatePasswordAction.RESET,
             id: 1
         }
-
+        mockHashPassword.mockResolvedValue('newhashedpassword');
         mockPrisma.userAuth.update.mockResolvedValue({})
 
         await userAuthService.updatePassword(mock_data)
@@ -113,7 +113,7 @@ describe('User Auth Service', () => {
                 user_id: mock_data.id
             },
             data: {
-                password: mock_data.newPassword,
+                password: 'newhashedpassword',
                 verification_token: null
             }
         })
@@ -135,14 +135,14 @@ describe('User Auth Service', () => {
         mockPrisma.userAuth.findUnique.mockResolvedValue(mock_user)
 
         mockComparePassword.mockResolvedValue(true);
-        mockHashPassword.mockResolvedValue('hashedpassword');
+        mockHashPassword.mockResolvedValue('newhashedpassword');
 
         await userAuthService.updatePassword(mock_data)
         expect(mockPrisma.userAuth.update).toHaveBeenCalledWith({
             where: {
                 user_id: mock_data.id
             },
-            data: { password: 'hashedpassword' },
+            data: { password: 'newhashedpassword' },
         })
     })
 

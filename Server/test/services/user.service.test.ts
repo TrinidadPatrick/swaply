@@ -80,7 +80,13 @@ describe('User Service', () => {
             ]
         }, select : {
             email: true,
-            id: true
+            id: true,
+            auth: {
+                select: {
+                    user_id: true,
+                    password: false
+                }
+            }
         }
         })
     })

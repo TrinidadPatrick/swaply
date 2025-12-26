@@ -66,13 +66,14 @@ export const markEmailAsVerified = async (id: number) => {
 }
 
 export const updatePassword = async ({oldPassword, newPassword, action, id} : updatePasswordProps ) => {
+    const new_hashedpassword = await hashPassword(newPassword)
     if(action === updatePasswordAction.RESET){
         await prisma.userAuth.update({
             where: {
                 user_id: id
             },
             data: {
-                password: await hashPassword(newPassword),
+                password: new_hashedpassword,
                 verification_token: null
             }
         })
@@ -95,7 +96,7 @@ export const updatePassword = async ({oldPassword, newPassword, action, id} : up
                 user_id: id
             },
             data: {
-                password: await hashPassword(newPassword)
+                password: new_hashedpassword
             }
         })
     }
