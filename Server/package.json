@@ -6,9 +6,9 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test vitest run",
     "dev": "npx tsx watch server.ts",
-    "build": "npm run generate-prisma && tsc",
+    "build": "npx prisma generate && tsc",
     "vercel-build": "npm run build",
-    "generate-prisma" : "npx prisma generate && npx prisma generate --schema=prisma/schema.test.prisma"
+    "generate-prisma-with-test" : "npx prisma generate && npx prisma generate --schema=prisma/schema.test.prisma"
   },
   "type": "module",
   "keywords": [],
