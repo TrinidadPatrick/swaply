@@ -14,7 +14,7 @@ generator test_client {
     output   = "../generated/prisma/test"
 }
 
-datasource db {
+datasource test_db {
     provider = "sqlite"
 }
 
@@ -33,7 +33,6 @@ model test_user {
 
     auth test_userAuth? @relation("UserToAuth")
 
-    @@map("users")
 }
 
 model test_userAuth {
@@ -48,5 +47,4 @@ model test_userAuth {
     created_at DateTime @default(now())
     updated_at DateTime @updatedAt
 
-    @@map("user_auths")
 }
