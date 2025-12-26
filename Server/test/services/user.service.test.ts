@@ -19,7 +19,7 @@ describe('User Service', () => {
 
         const users = await userService.getAllUsers()
         expect(users).toEqual(fake_users)
-        expect(mockPrisma.user.findMany).toHaveBeenCalledTimes(1)
+        expect(mockPrisma.user.findMany).toHaveBeenCalledTimes(2)
     })
 
     it('should get user by id', async () => {
