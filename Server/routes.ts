@@ -5,7 +5,7 @@ import authMiddleware from "./middlewares/auth.middleware.js"
 
 const router = Router()
 
-router.use('/user', authMiddleware, userRouter )
-router.use('/auth', authMiddleware, authRouter )
+router.use('/user', userRouter )
+router.use('/auth', authRouter )
 
 export default router

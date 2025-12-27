@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { getUserByOtp, markEmailAsVerified, sendOtp, updatePassword, updatePasswordAction, upsertOtp, validateCredentials } from "../services/user.auth.service.js";
 import { getUserbyEmailUsername } from "../services/user.service.js";
 import { handleError } from "../helpers/error-handler.js";
@@ -92,5 +92,11 @@ export const c_resetPassword = async (req : Request, res: Response) => {
         console.log(error)
         handleError(error)
     }
+}
+
+export const c_me = async (req : Request, res: Response) => {
+    const data = req.user
+
+    return res.status(200).json({data})
 }
 

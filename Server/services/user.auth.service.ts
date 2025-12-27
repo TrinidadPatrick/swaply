@@ -122,7 +122,7 @@ export const validateCredentials = async (email_username: string, password: stri
 
     const jwt_token = generateJwtToken({
         payload: {user_id: user.id, role: user.role},
-        expire_at: '1hr'
+        expire_at: '10m'
     })
     
     return {
