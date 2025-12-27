@@ -16,7 +16,7 @@ try {
   console.log('Database connected');
 } catch (error) {
   if (error instanceof Prisma.PrismaClientInitializationError) {
-    console.error('Failed to connect to database');
+    console.error('Failed to connect to database (Please try again after a few minutes)');
     console.error(error.message);
   } else {
     console.error('Unexpected error during startup', error);
