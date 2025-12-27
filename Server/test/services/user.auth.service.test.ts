@@ -266,6 +266,7 @@ describe('User Login Test', () => {
             user_id: 1,
             jwt_token: 'jwttoken'
         })
+        expect(mockGenerateJwt).toHaveBeenCalledTimes(1)
     });
 
 })
