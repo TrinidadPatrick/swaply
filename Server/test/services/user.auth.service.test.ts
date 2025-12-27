@@ -14,6 +14,12 @@ vi.mock('../../helpers/password-util', () => ({
   hashPassword: vi.fn(),
 }));
 
+vi.mock('../../helpers/jwt-utils', () => ({
+  generateJwtToken: vi.fn(),
+}));
+
+vi.mock('../../services/user.service');
+
 vi.mock('nodemailer', () => ({
   default: {
     createTransport: vi.fn(() => ({
@@ -24,78 +30,18 @@ vi.mock('nodemailer', () => ({
 
 import * as userAuthService from '../../services/user.auth.service'
 import * as passwordUtil from '../../helpers/password-util';
+import * as jwtUtil from '../../helpers/jwt-utils';
+import { AppError } from '../../helpers/AppError';
+import { getUserbyEmailUsername } from '../../services/user.service';
+import { Role } from '../../generated/prisma/enums';
 
 const mockComparePassword = passwordUtil.comparePassword as unknown as Mock;
 const mockHashPassword = passwordUtil.hashPassword as unknown as Mock;
+const mockGenerateJwt = jwtUtil.generateJwtToken as unknown as Mock;
 
-describe('User Auth Service', () => {
+describe('Password Update Test', () => {
     beforeEach(()=>{
         vi.clearAllMocks()
-    })
-
-    it('should get user by otp and user id', async () => {
-        const fake_user_auth = {user_id: 1, verification_token: '112233', token_expires_at: new Date('2025-12-24T10:00:00Z')}
-        mockPrisma.userAuth.findFirst.mockResolvedValue(fake_user_auth)
-
-        const user_auth = await userAuthService.getUserByOtp('112233', 1)
-        expect(user_auth).toEqual(fake_user_auth)
-        expect(mockPrisma.userAuth.findFirst).toHaveBeenCalledWith({
-        where: {
-            user_id : 1,
-            verification_token : '112233',
-            token_expires_at : {
-                gte: expect.any(Date)
-            }
-        }
-    })
-    })
-
-    it('should error if otp is invalid or expired', async () => {
-        const fake_user_auth = null
-        mockPrisma.userAuth.findFirst.mockResolvedValue(fake_user_auth)
-
-        const user_auth = await userAuthService.getUserByOtp('112233', 1)
-        expect(user_auth).toEqual(fake_user_auth)
-        expect(mockPrisma.userAuth.findFirst).toHaveBeenCalledWith({
-        where: {
-            user_id : 1,
-            verification_token : '112233',
-            token_expires_at : {
-                gte: expect.any(Date)
-            }
-        }
-    })
-    })
-
-    it('should update otp of user', async () => {
-        const fake_user_auth = {user_id: 1, verification_token: '112233', token_expires_at: new Date('2025-12-24T10:00:00Z')}
-        mockPrisma.userAuth.update.mockResolvedValue(fake_user_auth)
-
-        await userAuthService.upsertOtp('112233', new Date('2025-12-24T10:00:00Z'), 1)
-        expect(mockPrisma.userAuth.update).toHaveBeenCalledWith({
-        where : {
-            user_id: 1
-        },
-        data: {
-            verification_token: '112233',
-            token_expires_at: expect.any(Date)
-        }
-    })
-    })
-
-    it('should mark user auth as verified', async () => {
-        mockPrisma.userAuth.update.mockResolvedValue({})
-
-        await userAuthService.markEmailAsVerified(1)
-        expect(mockPrisma.userAuth.update).toHaveBeenCalledWith({
-            where : {
-                id: 1
-            },
-            data: {
-                email_verified: true,
-                verification_token: null
-            }
-        })
     })
 
     it('should update password with reset', async () => {
@@ -174,6 +120,92 @@ describe('User Auth Service', () => {
         await expect(userAuthService.updatePassword(mock_data)).rejects.toThrow("Old password is incorrect")
     })
 
+})
+
+describe('user Verification Test', () => {
+    beforeEach(()=>{
+        vi.clearAllMocks()
+    })
+
+    it('should mark user auth as verified', async () => {
+        mockPrisma.userAuth.update.mockResolvedValue({})
+
+        await userAuthService.markEmailAsVerified(1)
+        expect(mockPrisma.userAuth.update).toHaveBeenCalledWith({
+            where : {
+                id: 1
+            },
+            data: {
+                email_verified: true,
+                verification_token: null
+            }
+        })
+    })
+
+})
+
+describe('OTP Test', () => {
+    beforeEach(()=>{
+        vi.clearAllMocks()
+    })
+
+    it('should get user by otp and user id', async () => {
+        const fake_user_auth = {user_id: 1, verification_token: '112233', token_expires_at: new Date('2025-12-24T10:00:00Z')}
+        mockPrisma.userAuth.findFirst.mockResolvedValue(fake_user_auth)
+
+        const user_auth = await userAuthService.getUserByOtp('112233', 1)
+        expect(user_auth).toEqual(fake_user_auth)
+        expect(mockPrisma.userAuth.findFirst).toHaveBeenCalledWith({
+        where: {
+            user_id : 1,
+            verification_token : '112233',
+            token_expires_at : {
+                gte: expect.any(Date)
+            }
+        }
+    })
+    })
+
+    it('should error if otp is invalid or expired', async () => {
+        const fake_user_auth = null
+        mockPrisma.userAuth.findFirst.mockResolvedValue(fake_user_auth)
+
+        const user_auth = await userAuthService.getUserByOtp('112233', 1)
+        expect(user_auth).toEqual(fake_user_auth)
+        expect(mockPrisma.userAuth.findFirst).toHaveBeenCalledWith({
+        where: {
+            user_id : 1,
+            verification_token : '112233',
+            token_expires_at : {
+                gte: expect.any(Date)
+            }
+        }
+    })
+    })
+
+    it('should update otp of user', async () => {
+        const fake_user_auth = {user_id: 1, verification_token: '112233', token_expires_at: new Date('2025-12-24T10:00:00Z')}
+        mockPrisma.userAuth.update.mockResolvedValue(fake_user_auth)
+
+        await userAuthService.upsertOtp('112233', new Date('2025-12-24T10:00:00Z'), 1)
+        expect(mockPrisma.userAuth.update).toHaveBeenCalledWith({
+        where : {
+            user_id: 1
+        },
+        data: {
+            verification_token: '112233',
+            token_expires_at: expect.any(Date)
+        }
+    })
+    })
+
+})
+
+describe('Email Sending Test', () => {
+    beforeEach(()=>{
+        vi.clearAllMocks()
+    })
+
     it('should send email with correct parameters', async () => {
         await userAuthService.sendOtp({
             recipient: 'testrecipient',
@@ -192,4 +224,48 @@ describe('User Auth Service', () => {
             html: expect.stringContaining('112233')
         })
     })
+
+})
+
+describe('User Login Test', () => {
+    beforeEach(()=>{
+        vi.clearAllMocks()
+    })
+
+    it('should throw error when no username or password', async () => {
+        await expect(userAuthService.validateCredentials('', 'newPassword')).rejects.toThrowError(new AppError("Email and password are required", 400))
+    })
+
+    it('should throw 401 if user does not exist', async () => {
+        vi.mocked(getUserbyEmailUsername).mockResolvedValue(null)
+
+        await expect(userAuthService.validateCredentials('test@example.com', 'password123'))
+        .rejects.toThrowError(new AppError("Invalid email or password", 401));
+    });
+
+    it('should throw 401 if password does not match', async () => {
+        const mockUser = { id: 1, email: 'testemail', role: Role.USER, auth: { password: 'hashed_password', user_id: 1 } };
+        vi.mocked(getUserbyEmailUsername).mockResolvedValue(mockUser)
+
+        mockComparePassword.mockResolvedValue(false)
+
+        await expect(userAuthService.validateCredentials('test@example.com', 'wrong_password'))
+        .rejects.toThrowError(new AppError("Invalid email or password", 401));
+    });
+
+    it('should return userid and token if login successfull', async () => {
+        const mockUser = { id: 1, email: 'testemail', role: Role.USER, auth: { password: 'hashed_password', user_id: 1 } };
+
+        vi.mocked(getUserbyEmailUsername).mockResolvedValue(mockUser)
+        mockComparePassword.mockResolvedValue(true)
+        mockGenerateJwt.mockReturnValue('jwttoken')
+
+        const result = await userAuthService.validateCredentials('test@example.com', 'correct_password');
+
+        expect(result).toEqual({
+            user_id: 1,
+            jwt_token: 'jwttoken'
+        })
+    });
+
 })

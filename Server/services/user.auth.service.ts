@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 import { getUserbyEmailUsername } from './user.service.js';
 import { AppError } from '../helpers/AppError.js';
+import { generateJwtToken } from '../helpers/jwt-utils.js';
 
 interface emailProps {
     recipient: string,
@@ -119,9 +120,10 @@ export const validateCredentials = async (email_username: string, password: stri
         throw new AppError("Invalid email or password", 401);
     }
 
-    const jwt_token = jwt.sign({ id: user.id }, 'asdsadasasd', {
-        expiresIn: '1hr',
-    });
+    const jwt_token = generateJwtToken({
+        payload: {user_id: user.id, role: user.role},
+        expire_at: '1hr'
+    })
     
     return {
         user_id: user.id,

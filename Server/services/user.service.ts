@@ -65,6 +65,7 @@ export const getUserbyEmailUsername = async (email_username: string, include_pas
         }, select : {
             email: true,
             id: true,
+            role: true,
             auth: {
                 select: {
                     user_id: true,

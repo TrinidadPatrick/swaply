@@ -81,6 +81,7 @@ describe('User Service', () => {
         }, select : {
             email: true,
             id: true,
+            role: true,
             auth: {
                 select: {
                     user_id: true,

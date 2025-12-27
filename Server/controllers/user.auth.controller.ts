@@ -3,7 +3,6 @@ import { getUserByOtp, markEmailAsVerified, sendOtp, updatePassword, updatePassw
 import { getUserbyEmailUsername } from "../services/user.service.js";
 import { handleError } from "../helpers/error-handler.js";
 import { generateVerificationToken } from "../helpers/generate-verification-token.js";
-import { hashPassword } from "../helpers/password-util.js";
 
 export const c_verifyAccount = async (req : Request, res : Response) => {
     const {userId, otpToken} = req.body
