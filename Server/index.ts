@@ -1,5 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express'
 import routes from './routes.js'
+import { Prisma } from './generated/prisma/client.js';
+import { prisma } from './lib/prisma.js';
 
 interface WebError extends Error {
   statusCode?: number;
@@ -8,6 +10,19 @@ interface WebError extends Error {
 const app = express()
 
 app.use(express.json())
+
+try {
+  await prisma.$connect();
+  console.log('Database connected');
+} catch (error) {
+  if (error instanceof Prisma.PrismaClientInitializationError) {
+    console.error('Failed to connect to database');
+    console.error(error.message);
+  } else {
+    console.error('Unexpected error during startup', error);
+  }
+  process.exit(1);
+}
 
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome To Swaply Initial Server' });
